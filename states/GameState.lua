@@ -54,10 +54,15 @@ end
 function GameState:enter(Background)
     background['Type'] = Background[2]
     background['Seek'] = Background[3]
+    background['Canvas'] = love.graphics.newCanvas(1920, 1080)
+
     if background['Type'] == 'video' then
         background['Background'] = love.graphics.newVideo('Backgrounds/' .. Background[1])
     else
-        background['Background'] = love.graphics.newImage('Backgrounds/' .. Background[1])
+        background['Image'] = love.graphics.newImage('Backgrounds/' .. Background[1])
+        love.graphics.setCanvas(background['Canvas'])
+        love.graphics.draw(background['Image'])
+        love.graphics.setCanvas()
     end
 
     songs[0] = love.audio.newSource('Music/' .. Background[7],'stream')
@@ -285,6 +290,20 @@ function GameState:update(dt)
                 P2_deck[k]:position()
             end
 
+            love.graphics.setCanvas(background['Canvas'])
+            love.graphics.clear()
+            if background['Image'] then
+                love.graphics.draw(background['Image'])
+            end
+            love.graphics.setCanvas()
+
+            for k, pair in pairs(P1_deck) do
+                P1_deck[k]:renderToCanvas()
+            end
+            for k, pair in pairs(P2_deck) do
+                P2_deck[k]:renderToCanvas()
+            end
+
             for k, pair in pairs(P1_deck) do
                 P1_deck[k]:aim()
             end
@@ -318,6 +337,21 @@ function GameState:update(dt)
             for k, pair in pairs(P2_deck) do
                 P2_deck[k]:check_health()
             end
+
+            love.graphics.setCanvas(background['Canvas'])
+            love.graphics.clear()
+            if background['Image'] then
+                love.graphics.draw(background['Image'])
+            end
+            love.graphics.setCanvas()
+
+            for k, pair in pairs(P1_deck) do
+                P1_deck[k]:renderToCanvas()
+            end
+            for k, pair in pairs(P2_deck) do
+                P2_deck[k]:renderToCanvas()
+            end
+
             if not next(P1_deck) then
                 P1_deck = nil
             end
@@ -342,16 +376,16 @@ function GameState:update(dt)
 end
 
 function GameState:render()
-    if P1_deck ~= nil then
-        for k, pair in pairs(P1_deck) do
-            P1_deck[k]:render()
-        end
-    end
-    if P2_deck ~= nil then
-        for k, pair in pairs(P2_deck) do
-            P2_deck[k]:render()
-        end
-    end
+    -- if P1_deck ~= nil then
+    --     for k, pair in pairs(P1_deck) do
+    --         P1_deck[k]:render()
+    --     end
+    -- end
+    -- if P2_deck ~= nil then
+    --     for k, pair in pairs(P2_deck) do
+    --         P2_deck[k]:render()
+    --     end
+    -- end
 
     if P1_deck ~= nil then
         for k, pair in pairs(P1_deck) do

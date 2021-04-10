@@ -244,9 +244,18 @@ end
 
 function love.draw()
     push:start()
+    love.graphics.setColor(1, 1, 1, 1)
+
     if background['Background'] then
-        love.graphics.draw(background['Background'],0,0)
+        love.graphics.draw(background['Background'])
     end
+
+    if background['Canvas'] then
+        love.graphics.setBlendMode("alpha", "premultiplied")
+        love.graphics.draw(background['Canvas'])
+        love.graphics.setBlendMode("alpha")
+    end
+
     gStateMachine:render()
     for k, pair in pairs(gui) do
         pair:render()
@@ -254,6 +263,7 @@ function love.draw()
     if Settings['FPS_counter'] == true then
         love.graphics.print({{0,255,0,255}, 'FPS: ' .. tostring(love.timer.getFPS())}, font50, 1680, 1020)
     end
+
     -- love.graphics.print(tostring(mouseTrapped) .. ' ' .. tostring(mouseTrapped2))
     -- if P1_deck then
     --     if P1_deck[1] then

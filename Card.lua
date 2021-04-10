@@ -81,6 +81,25 @@ function Card:check_health()
     end
 end
 
+function Card:renderToCanvas()
+    love.graphics.setCanvas(background['Canvas'])
+        love.graphics.draw(self.image,self.x,self.y,0,1,sx)
+        if self.health < 1000 then
+            love.graphics.setColor(0.3,0.3,0.3)
+            love.graphics.rectangle('fill',self.x-2,self.y-4,self.width+4,10,5,5)
+            self.colour = self.dodge / self.attacks_taken
+            self.colour = self.colour + (1-self.colour) / 2 --Proportionally increases brightness of self.colour so it's between 0.5 and 1 rather than 0 and 1 
+            if self.dodge == 0 then
+                love.graphics.setColor(1,0.82,0)
+            else
+                love.graphics.setColor(self.colour,self.colour,self.colour)
+            end
+            love.graphics.rectangle('fill',self.x-2,self.y-4,(self.width+4)/(1000/self.health),10,5,5)
+            love.graphics.setColor(1,1,1)
+        end
+    love.graphics.setCanvas()
+end
+
 function Card:move()
     if self.team == 1 then
         if (self.number < 6 and self.column < 5) or (self.number < 12 and self.column < 4) or (self.number < 18 and self.column < 3) then
